@@ -78,8 +78,6 @@ CREATE TABLE users (
 </html>
 
 *** ADD.PHP ***
-
-<!-- APERTURA del Código antiguo -->
 <?php
 include 'db.php';
 
@@ -96,39 +94,8 @@ $stmt->execute();
 header("Location: index.php");
 exit;
 ?>
-<!-- CIERRE del Código antiguo -->
- 
-<!-- Código reformado explicar más adelante --> 
-<?php
-include 'db.php';
-
-if (isset($_POST['name'], $_POST['email'])) {
-    $name  = $_POST['name'];
-    $email = $_POST['email'];
-
-    $stmt = $conn->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
-    if ($stmt === false) {
-        die("Error en la preparación de la consulta: " . $conn->error);
-    }
-
-    $stmt->bind_param("ss", $name, $email);
-
-    if (!$stmt->execute()) {
-        die("Error al ejecutar la consulta: " . $stmt->error);
-    }
-
-    $stmt->close();
-
-    header("Location: index.php");
-    exit;
-} else {
-    die("Datos incompletos.");
-}
-?>
-
 
 *** EDIT.PHP ***
-<!-- APERTURA del Código antiguo -->
 <?php
 include 'db.php';
 
@@ -146,39 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $conn->prepare("UPDATE users where name=?, email=? WHERE id=?");
     $stmt->bind_param("ssi", $name, $email, $id);
     $stmt->execute();
-
-    header("Location: index.php");
-    exit;
-}
-?>
-<!-- CIERRE del Código antiguo -->
-
-<!-- Código reformado explicar más adelante -->
-<?php
-include 'db.php';
-
-if (isset($_GET['id'])) {
-    $id = (int)$_GET['id'];
-    $result = $conn->query("SELECT * FROM users WHERE id=$id");
-    $user = $result->fetch_assoc();
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id    = (int)$_POST['id'];
-    $name  = $_POST['name'];
-    $email = $_POST['email'];
-
-    $stmt = $conn->prepare("UPDATE users SET name=?, email=? WHERE id=?");
-    if ($stmt === false) {
-        die("Error en la preparación de la consulta: " . $conn->error);
-    }
-    $stmt->bind_param("ssi", $name, $email, $id);
-
-    if (!$stmt->execute()) {
-        die("Error en la ejecución de la consulta: " . $stmt->error);
-    }
-
-    $stmt->close();
 
     header("Location: index.php");
     exit;
